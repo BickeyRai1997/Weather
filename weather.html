@@ -173,3 +173,19 @@
         <p class="font-display text-xl text-[var(--cream)]/60 mb-2">No station selected</p>
         <p class="font-mono text-xs text-[var(--cream)]/40">Search a city above, or use your current location.</p>
       </div>
+      <p class="font-mono text-[10px] text-[var(--cream)]/25 mt-14 text-center">Data from Open-Meteo — no key, no
+        tracking.</p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const el = (id) => document.getElementById(id);
+      const searchForm = el('searchForm');
+      const cityInput = el('cityInput');
+      const suggestions = el('suggestions');
+      const statusBox = el('status');
+      const readout = el('readout');
+      const empty = el('empty');
+      const sky = el('sky');
+      const geoBtn = el('geoBtn');
