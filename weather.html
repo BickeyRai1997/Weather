@@ -214,3 +214,8 @@
     99: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
   };
   function wmoInfo(code) { return WMO[code] || { label: 'Unknown', icon: 'cloud', sky: 'grey' }; }
+   const SKIES = {
+    day:  'radial-gradient(120% 100% at 50% -10%, #2C5A82 0%, #123049 55%, #060D15 100%)',
+    grey: 'radial-gradient(120% 100% at 50% -10%, #33404A 0%, #1A2229 55%, #060D15 100%)',
+    rain: 'radial-gradient(120% 100% at 50% -10%, #24344A 0%, #131B27 55%, #05080C 100%)',
+  };
