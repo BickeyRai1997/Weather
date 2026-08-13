@@ -189,3 +189,28 @@
       const empty = el('empty');
       const sky = el('sky');
       const geoBtn = el('geoBtn');
+       // ---- weather code -> label / icon / sky palette ----
+  const WMO = {
+    0:  { label: 'Clear sky',        icon: 'sun',    sky: 'day'   },
+    1:  { label: 'Mostly clear',     icon: 'sun',    sky: 'day'   },
+    2:  { label: 'Partly cloudy',    icon: 'cloud-sun', sky: 'day' },
+    3:  { label: 'Overcast',         icon: 'cloud',  sky: 'grey'  },
+    45: { label: 'Fog',              icon: 'fog',    sky: 'grey'  },
+    48: { label: 'Depositing fog',   icon: 'fog',    sky: 'grey'  },
+    51: { label: 'Light drizzle',    icon: 'rain',   sky: 'rain'  },
+    53: { label: 'Drizzle',          icon: 'rain',   sky: 'rain'  },
+    55: { label: 'Dense drizzle',    icon: 'rain',   sky: 'rain'  },
+    61: { label: 'Light rain',       icon: 'rain',   sky: 'rain'  },
+    63: { label: 'Rain',             icon: 'rain',   sky: 'rain'  },
+    65: { label: 'Heavy rain',       icon: 'rain',   sky: 'rain'  },
+    71: { label: 'Light snow',       icon: 'snow',   sky: 'grey'  },
+    73: { label: 'Snow',             icon: 'snow',   sky: 'grey'  },
+    75: { label: 'Heavy snow',       icon: 'snow',   sky: 'grey'  },
+    80: { label: 'Rain showers',     icon: 'rain',   sky: 'rain'  },
+    81: { label: 'Rain showers',     icon: 'rain',   sky: 'rain'  },
+    82: { label: 'Violent showers',  icon: 'storm',  sky: 'rain'  },
+    95: { label: 'Thunderstorm',     icon: 'storm',  sky: 'rain'  },
+    96: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
+    99: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
+  };
+  function wmoInfo(code) { return WMO[code] || { label: 'Unknown', icon: 'cloud', sky: 'grey' }; }
