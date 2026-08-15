@@ -233,3 +233,11 @@
       snow: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g fill="var(--cream)"><circle cx="34" cy="82" r="3"/><circle cx="52" cy="86" r="3"/><circle cx="68" cy="80" r="3"/></g></svg>`,
     storm: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 50a18 18 0 0 1 4-35.5A24 24 0 0 1 72 24a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><polygon points="52,58 40,80 50,80 44,96 66,70 54,70" fill="var(--amber)"/></svg>`,
   };
+   function fmtHour(iso) {
+    const d = new Date(iso);
+    return d.toLocaleTimeString(undefined, { hour: 'numeric' });
+  }
+  function fmtDay(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { weekday: 'short' });
+  }
