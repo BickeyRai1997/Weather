@@ -241,3 +241,12 @@
     const d = new Date(iso + 'T00:00:00');
     return d.toLocaleDateString(undefined, { weekday: 'short' });
   }
+
+   function setSky(kind) { sky.style.background = SKIES[kind] || SKIES.grey; }
+ 
+  function setStatus(msg, isError) {
+    statusBox.textContent = msg;
+    statusBox.classList.toggle('hidden', !msg);
+    statusBox.style.color = isError ? 'var(--rust)' : '';
+  }
+ 
