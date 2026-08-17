@@ -189,80 +189,91 @@
       const empty = el('empty');
       const sky = el('sky');
       const geoBtn = el('geoBtn');
-       // ---- weather code -> label / icon / sky palette ----
-  const WMO = {
-    0:  { label: 'Clear sky',        icon: 'sun',    sky: 'day'   },
-    1:  { label: 'Mostly clear',     icon: 'sun',    sky: 'day'   },
-    2:  { label: 'Partly cloudy',    icon: 'cloud-sun', sky: 'day' },
-    3:  { label: 'Overcast',         icon: 'cloud',  sky: 'grey'  },
-    45: { label: 'Fog',              icon: 'fog',    sky: 'grey'  },
-    48: { label: 'Depositing fog',   icon: 'fog',    sky: 'grey'  },
-    51: { label: 'Light drizzle',    icon: 'rain',   sky: 'rain'  },
-    53: { label: 'Drizzle',          icon: 'rain',   sky: 'rain'  },
-    55: { label: 'Dense drizzle',    icon: 'rain',   sky: 'rain'  },
-    61: { label: 'Light rain',       icon: 'rain',   sky: 'rain'  },
-    63: { label: 'Rain',             icon: 'rain',   sky: 'rain'  },
-    65: { label: 'Heavy rain',       icon: 'rain',   sky: 'rain'  },
-    71: { label: 'Light snow',       icon: 'snow',   sky: 'grey'  },
-    73: { label: 'Snow',             icon: 'snow',   sky: 'grey'  },
-    75: { label: 'Heavy snow',       icon: 'snow',   sky: 'grey'  },
-    80: { label: 'Rain showers',     icon: 'rain',   sky: 'rain'  },
-    81: { label: 'Rain showers',     icon: 'rain',   sky: 'rain'  },
-    82: { label: 'Violent showers',  icon: 'storm',  sky: 'rain'  },
-    95: { label: 'Thunderstorm',     icon: 'storm',  sky: 'rain'  },
-    96: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
-    99: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
-  };
-  function wmoInfo(code) { return WMO[code] || { label: 'Unknown', icon: 'cloud', sky: 'grey' }; }
-   const SKIES = {
-    day:  'radial-gradient(120% 100% at 50% -10%, #2C5A82 0%, #123049 55%, #060D15 100%)',
-    grey: 'radial-gradient(120% 100% at 50% -10%, #33404A 0%, #1A2229 55%, #060D15 100%)',
-    rain: 'radial-gradient(120% 100% at 50% -10%, #24344A 0%, #131B27 55%, #05080C 100%)',
-  };
+      // ---- weather code -> label / icon / sky palette ----
+      const WMO = {
+        0: { label: 'Clear sky', icon: 'sun', sky: 'day' },
+        1: { label: 'Mostly clear', icon: 'sun', sky: 'day' },
+        2: { label: 'Partly cloudy', icon: 'cloud-sun', sky: 'day' },
+        3: { label: 'Overcast', icon: 'cloud', sky: 'grey' },
+        45: { label: 'Fog', icon: 'fog', sky: 'grey' },
+        48: { label: 'Depositing fog', icon: 'fog', sky: 'grey' },
+        51: { label: 'Light drizzle', icon: 'rain', sky: 'rain' },
+        53: { label: 'Drizzle', icon: 'rain', sky: 'rain' },
+        55: { label: 'Dense drizzle', icon: 'rain', sky: 'rain' },
+        61: { label: 'Light rain', icon: 'rain', sky: 'rain' },
+        63: { label: 'Rain', icon: 'rain', sky: 'rain' },
+        65: { label: 'Heavy rain', icon: 'rain', sky: 'rain' },
+        71: { label: 'Light snow', icon: 'snow', sky: 'grey' },
+        73: { label: 'Snow', icon: 'snow', sky: 'grey' },
+        75: { label: 'Heavy snow', icon: 'snow', sky: 'grey' },
+        80: { label: 'Rain showers', icon: 'rain', sky: 'rain' },
+        81: { label: 'Rain showers', icon: 'rain', sky: 'rain' },
+        82: { label: 'Violent showers', icon: 'storm', sky: 'rain' },
+        95: { label: 'Thunderstorm', icon: 'storm', sky: 'rain' },
+        96: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
+        99: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
+      };
+      function wmoInfo(code) { return WMO[code] || { label: 'Unknown', icon: 'cloud', sky: 'grey' }; }
+      const SKIES = {
+        day: 'radial-gradient(120% 100% at 50% -10%, #2C5A82 0%, #123049 55%, #060D15 100%)',
+        grey: 'radial-gradient(120% 100% at 50% -10%, #33404A 0%, #1A2229 55%, #060D15 100%)',
+        rain: 'radial-gradient(120% 100% at 50% -10%, #24344A 0%, #131B27 55%, #05080C 100%)',
+      };
 
- const ICONS = {
-    sun: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="20" fill="var(--amber)"/><g stroke="var(--amber)" stroke-width="4" stroke-linecap="round">
+      const ICONS = {
+        sun: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="20" fill="var(--amber)"/><g stroke="var(--amber)" stroke-width="4" stroke-linecap="round">
       <line x1="50" y1="8" x2="50" y2="20"/><line x1="50" y1="80" x2="50" y2="92"/>
       <line x1="8" y1="50" x2="20" y2="50"/><line x1="80" y1="50" x2="92" y2="50"/>
       <line x1="19" y1="19" x2="27" y2="27"/><line x1="73" y1="73" x2="81" y2="81"/>
       <line x1="81" y1="19" x2="73" y2="27"/><line x1="27" y1="73" x2="19" y2="81"/></g></svg>`,
-    'cloud-sun': `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="38" cy="38" r="16" fill="var(--amber)"/><path d="M20 68a16 16 0 0 1 4-31.5A22 22 0 0 1 66 44a14 14 0 0 1-2 28H24a14 14 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
-    cloud: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 72a18 18 0 0 1 4-35.5A24 24 0 0 1 72 46a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
-    fog: `<svg viewBox="0 0 100 100" class="w-full h-full"><g stroke="var(--cream)" stroke-width="5" stroke-linecap="round" opacity="0.7"><line x1="15" y1="35" x2="85" y2="35"/><line x1="25" y1="50" x2="75" y2="50"/><line x1="15" y1="65" x2="85" y2="65"/></g></svg>`,
-    rain: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g stroke="var(--slate)" stroke-width="4" stroke-linecap="round"><line x1="35" y1="72" x2="30" y2="88"/><line x1="52" y1="72" x2="47" y2="88"/><line x1="69" y1="72" x2="64" y2="88"/></g></svg>`,
-      snow: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g fill="var(--cream)"><circle cx="34" cy="82" r="3"/><circle cx="52" cy="86" r="3"/><circle cx="68" cy="80" r="3"/></g></svg>`,
-    storm: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 50a18 18 0 0 1 4-35.5A24 24 0 0 1 72 24a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><polygon points="52,58 40,80 50,80 44,96 66,70 54,70" fill="var(--amber)"/></svg>`,
-  };
-   function fmtHour(iso) {
-    const d = new Date(iso);
-    return d.toLocaleTimeString(undefined, { hour: 'numeric' });
-  }
-  function fmtDay(iso) {
-    const d = new Date(iso + 'T00:00:00');
-    return d.toLocaleDateString(undefined, { weekday: 'short' });
-  }
+        'cloud-sun': `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="38" cy="38" r="16" fill="var(--amber)"/><path d="M20 68a16 16 0 0 1 4-31.5A22 22 0 0 1 66 44a14 14 0 0 1-2 28H24a14 14 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
+        cloud: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 72a18 18 0 0 1 4-35.5A24 24 0 0 1 72 46a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
+        fog: `<svg viewBox="0 0 100 100" class="w-full h-full"><g stroke="var(--cream)" stroke-width="5" stroke-linecap="round" opacity="0.7"><line x1="15" y1="35" x2="85" y2="35"/><line x1="25" y1="50" x2="75" y2="50"/><line x1="15" y1="65" x2="85" y2="65"/></g></svg>`,
+        rain: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g stroke="var(--slate)" stroke-width="4" stroke-linecap="round"><line x1="35" y1="72" x2="30" y2="88"/><line x1="52" y1="72" x2="47" y2="88"/><line x1="69" y1="72" x2="64" y2="88"/></g></svg>`,
+        snow: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g fill="var(--cream)"><circle cx="34" cy="82" r="3"/><circle cx="52" cy="86" r="3"/><circle cx="68" cy="80" r="3"/></g></svg>`,
+        storm: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 50a18 18 0 0 1 4-35.5A24 24 0 0 1 72 24a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><polygon points="52,58 40,80 50,80 44,96 66,70 54,70" fill="var(--amber)"/></svg>`,
+      };
+      function fmtHour(iso) {
+        const d = new Date(iso);
+        return d.toLocaleTimeString(undefined, { hour: 'numeric' });
+      }
+      function fmtDay(iso) {
+        const d = new Date(iso + 'T00:00:00');
+        return d.toLocaleDateString(undefined, { weekday: 'short' });
+      }
 
-   function setSky(kind) { sky.style.background = SKIES[kind] || SKIES.grey; }
- 
-  function setStatus(msg, isError) {
-    statusBox.textContent = msg;
-    statusBox.classList.toggle('hidden', !msg);
-    statusBox.style.color = isError ? 'var(--rust)' : '';
-  }
-  async function geocode(query) {
-    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
-    if (!res.ok) throw new Error('Geocoding failed');
-    const data = await res.json();
-    return data.results || [];
-  }
+      function setSky(kind) { sky.style.background = SKIES[kind] || SKIES.grey; }
 
-   async function fetchWeather(lat, lon) {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-      `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m` +
-      `&hourly=temperature_2m,weather_code` +
-      `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
-      `&timezone=auto`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Forecast fetch failed');
-    return res.json();
-  }
+      function setStatus(msg, isError) {
+        statusBox.textContent = msg;
+        statusBox.classList.toggle('hidden', !msg);
+        statusBox.style.color = isError ? 'var(--rust)' : '';
+      }
+      async function geocode(query) {
+        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
+        if (!res.ok) throw new Error('Geocoding failed');
+        const data = await res.json();
+        return data.results || [];
+      }
+
+      async function fetchWeather(lat, lon) {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+          `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m` +
+          `&hourly=temperature_2m,weather_code` +
+          `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
+          `&timezone=auto`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Forecast fetch failed');
+        return res.json();
+      }
+      function renderIcon(iconKey) {
+        el('iconWrap').innerHTML = ICONS[iconKey] || ICONS.cloud;
+      }
+
+      function render(place, data) {
+        empty.classList.add('hidden');
+        readout.classList.remove('hidden');
+
+        const cur = data.current;
+        const info = wmoInfo(cur.weather_code);
+        setSky(info.sky);
