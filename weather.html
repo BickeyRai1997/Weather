@@ -284,3 +284,16 @@
         el('wind').textContent = `${Math.round(cur.wind_speed_10m)} km/h`;
         el('humidity').textContent = `${Math.round(cur.relative_humidity_2m)}%`;
         renderIcon(info.icon);
+        // hourly — next 24 from current time
+        const nowIdx = data.hourly.time.findIndex(t => new Date(t) >= new Date(cur.time));
+        const startIdx = nowIdx === -1 ? 0 : nowIdx;
+        const hourlyHtml = data.hourly.time.slice(startIdx, startIdx + 24).map((t, i) => {
+          const idx = startIdx + i;
+          const hInfo = wmoInfo(data.hourly.weather_code[idx]);
+          return `<div class="flex flex-col items-center gap-2 w-14 shrink-0">
+        <span class="font-mono text-[11px] text-[var(--cream)]/50">${i === 0 ? 'Now' : fmtHour(t)}</span>
+        <div class="w-8 h-8">${ICONS[hInfo.icon] || ICONS.cloud}</div>
+        <span class="font-display text-lg">${Math.round(data.hourly.temperature_2m[idx])}°</span>
+      </div>`;
+        }).join('');
+        el('hourly').innerHTML = hourlyHtml;
