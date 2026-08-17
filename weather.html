@@ -277,3 +277,10 @@
         const cur = data.current;
         const info = wmoInfo(cur.weather_code);
         setSky(info.sky);
+        el('placeName').textContent = place;
+        el('tempMain').textContent = Math.round(cur.temperature_2m);
+        el('condition').textContent = info.label;
+        el('feelsLike').textContent = `Feels like ${Math.round(cur.apparent_temperature)}°`;
+        el('wind').textContent = `${Math.round(cur.wind_speed_10m)} km/h`;
+        el('humidity').textContent = `${Math.round(cur.relative_humidity_2m)}%`;
+        renderIcon(info.icon);
