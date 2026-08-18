@@ -97,6 +97,7 @@
         </div>
         <p class="font-mono text-xs text-[var(--cream)]/50 hidden sm:block" id="clock">—</p>
       </div>
+
       <!-- Search -->
       <form id="searchForm" class="relative mb-10">
         <label class="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--cream)]/50 block mb-2">Locate a
@@ -134,6 +135,7 @@
             <p class="font-mono text-sm text-[var(--cream)]/60 mt-1" id="condition">—</p>
             <p class="font-mono text-xs text-[var(--cream)]/40 mt-3" id="feelsLike">—</p>
           </div>
+
           <!-- Icon + gauges -->
           <div class="border border-[var(--line)] p-6 flex flex-col items-center">
             <div id="iconWrap" class="w-28 h-28 mb-4"></div>
@@ -149,6 +151,7 @@
             </div>
           </div>
         </div>
+
         <!-- Hourly ticker -->
         <div class="mb-12">
           <p
@@ -158,6 +161,7 @@
             <div id="hourly" class="flex gap-6 pb-2 min-w-max"></div>
           </div>
         </div>
+
         <!-- 7-day -->
         <div>
           <p
@@ -173,6 +177,7 @@
         <p class="font-display text-xl text-[var(--cream)]/60 mb-2">No station selected</p>
         <p class="font-mono text-xs text-[var(--cream)]/40">Search a city above, or use your current location.</p>
       </div>
+
       <p class="font-mono text-[10px] text-[var(--cream)]/25 mt-14 text-center">Data from Open-Meteo — no key, no
         tracking.</p>
     </div>
@@ -189,6 +194,7 @@
       const empty = el('empty');
       const sky = el('sky');
       const geoBtn = el('geoBtn');
+
       // ---- weather code -> label / icon / sky palette ----
       const WMO = {
         0: { label: 'Clear sky', icon: 'sun', sky: 'day' },
@@ -214,6 +220,7 @@
         99: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
       };
       function wmoInfo(code) { return WMO[code] || { label: 'Unknown', icon: 'cloud', sky: 'grey' }; }
+
       const SKIES = {
         day: 'radial-gradient(120% 100% at 50% -10%, #2C5A82 0%, #123049 55%, #060D15 100%)',
         grey: 'radial-gradient(120% 100% at 50% -10%, #33404A 0%, #1A2229 55%, #060D15 100%)',
@@ -233,6 +240,7 @@
         snow: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g fill="var(--cream)"><circle cx="34" cy="82" r="3"/><circle cx="52" cy="86" r="3"/><circle cx="68" cy="80" r="3"/></g></svg>`,
         storm: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 50a18 18 0 0 1 4-35.5A24 24 0 0 1 72 24a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><polygon points="52,58 40,80 50,80 44,96 66,70 54,70" fill="var(--amber)"/></svg>`,
       };
+
       function fmtHour(iso) {
         const d = new Date(iso);
         return d.toLocaleTimeString(undefined, { hour: 'numeric' });
@@ -249,6 +257,7 @@
         statusBox.classList.toggle('hidden', !msg);
         statusBox.style.color = isError ? 'var(--rust)' : '';
       }
+
       async function geocode(query) {
         const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
         if (!res.ok) throw new Error('Geocoding failed');
@@ -266,6 +275,7 @@
         if (!res.ok) throw new Error('Forecast fetch failed');
         return res.json();
       }
+
       function renderIcon(iconKey) {
         el('iconWrap').innerHTML = ICONS[iconKey] || ICONS.cloud;
       }
@@ -277,6 +287,7 @@
         const cur = data.current;
         const info = wmoInfo(cur.weather_code);
         setSky(info.sky);
+
         el('placeName').textContent = place;
         el('tempMain').textContent = Math.round(cur.temperature_2m);
         el('condition').textContent = info.label;
@@ -284,6 +295,7 @@
         el('wind').textContent = `${Math.round(cur.wind_speed_10m)} km/h`;
         el('humidity').textContent = `${Math.round(cur.relative_humidity_2m)}%`;
         renderIcon(info.icon);
+
         // hourly — next 24 from current time
         const nowIdx = data.hourly.time.findIndex(t => new Date(t) >= new Date(cur.time));
         const startIdx = nowIdx === -1 ? 0 : nowIdx;
@@ -297,35 +309,55 @@
       </div>`;
         }).join('');
         el('hourly').innerHTML = hourlyHtml;
-        async function loadByCoords(lat, lon, label) {
-          try {
-            setStatus('Reading the sky…');
-            const data = await fetchWeather(lat, lon);
-            setStatus('');
-            render(label, data);
-          } catch (e) {
-            setStatus('Could not read that station. Try again.', true);
-          }
+
+        // daily
+        const dailyHtml = data.daily.time.map((t, i) => {
+          const dInfo = wmoInfo(data.daily.weather_code[i]);
+          return `<div class="flex items-center justify-between py-3">
+        <span class="font-mono text-sm w-14 text-[var(--cream)]/70">${i === 0 ? 'Today' : fmtDay(t)}</span>
+        <div class="w-7 h-7">${ICONS[dInfo.icon] || ICONS.cloud}</div>
+        <span class="font-mono text-xs text-[var(--cream)]/50 flex-1 text-center hidden sm:block">${dInfo.label}</span>
+        <span class="font-display text-base">
+          <span class="text-[var(--cream)]">${Math.round(data.daily.temperature_2m_max[i])}°</span>
+          <span class="text-[var(--cream)]/40 ml-1">${Math.round(data.daily.temperature_2m_min[i])}°</span>
+        </span>
+      </div>`;
+        }).join('');
+        el('daily').innerHTML = dailyHtml;
+      }
+
+      async function loadByCoords(lat, lon, label) {
+        try {
+          setStatus('Reading the sky…');
+          const data = await fetchWeather(lat, lon);
+          setStatus('');
+          render(label, data);
+        } catch (e) {
+          setStatus('Could not read that station. Try again.', true);
         }
-        async function loadByQuery(query) {
-          try {
-            setStatus('Locating station…');
-            const results = await geocode(query);
-            if (!results.length) {
-              setStatus('No matching location found.', true);
-              return;
-            }
-            const r = results[0];
-            const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
-            await loadByCoords(r.latitude, r.longitude, label);
-          } catch (e) {
-            setStatus('Something went wrong. Check your connection.', true);
+      }
+
+      async function loadByQuery(query) {
+        try {
+          setStatus('Locating station…');
+          const results = await geocode(query);
+          if (!results.length) {
+            setStatus('No matching location found.', true);
+            return;
           }
+          const r = results[0];
+          const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
+          await loadByCoords(r.latitude, r.longitude, label);
+        } catch (e) {
+          setStatus('Something went wrong. Check your connection.', true);
         }
-        // search submit
-        searchForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          suggestions.classList.add('hidden');
-          const q = cityInput.value.trim();
-          if (q) loadByQuery(q);
-        });
+      }
+
+      // search submit
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        suggestions.classList.add('hidden');
+        const q = cityInput.value.trim();
+        if (q) loadByQuery(q);
+      });
+  
