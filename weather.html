@@ -297,3 +297,13 @@
       </div>`;
         }).join('');
         el('hourly').innerHTML = hourlyHtml;
+        async function loadByCoords(lat, lon, label) {
+          try {
+            setStatus('Reading the sky…');
+            const data = await fetchWeather(lat, lon);
+            setStatus('');
+            render(label, data);
+          } catch (e) {
+            setStatus('Could not read that station. Try again.', true);
+          }
+        }
