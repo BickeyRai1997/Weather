@@ -322,3 +322,10 @@
             setStatus('Something went wrong. Check your connection.', true);
           }
         }
+        // search submit
+        searchForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          suggestions.classList.add('hidden');
+          const q = cityInput.value.trim();
+          if (q) loadByQuery(q);
+        });
