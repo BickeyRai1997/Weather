@@ -307,3 +307,18 @@
             setStatus('Could not read that station. Try again.', true);
           }
         }
+        async function loadByQuery(query) {
+          try {
+            setStatus('Locating station…');
+            const results = await geocode(query);
+            if (!results.length) {
+              setStatus('No matching location found.', true);
+              return;
+            }
+            const r = results[0];
+            const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
+            await loadByCoords(r.latitude, r.longitude, label);
+          } catch (e) {
+            setStatus('Something went wrong. Check your connection.', true);
+          }
+        }
