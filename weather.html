@@ -360,4 +360,16 @@
         const q = cityInput.value.trim();
         if (q) loadByQuery(q);
       });
+      // live suggestions
+      let debounceTimer;
+      cityInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const q = cityInput.value.trim();
+        if (q.length < 2) { suggestions.classList.add('hidden'); return; }
+        debounceTimer = setTimeout(async () => {
+          try {
+            const results = await geocode(q);
+            if (!results.length) { suggestions.classList.add('hidden'); return; }
+            suggestions.innerHTML = results.map(r => {
+              const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
   
