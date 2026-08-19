@@ -372,4 +372,11 @@
             if (!results.length) { suggestions.classList.add('hidden'); return; }
             suggestions.innerHTML = results.map(r => {
               const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
+              return `<button type="button" data-lat="${r.latitude}" data-lon="${r.longitude}" data-label="${label}"
+            class="suggestion-item block w-full text-left px-4 py-2 font-mono text-sm hover:bg-[var(--amber)]/10 hover:text-[var(--amber)] transition-colors">${label}</button>`;
+            }).join('');
+            suggestions.classList.remove('hidden');
+          } catch (e) { /* ignore */ }
+        }, 300);
+      });
   
