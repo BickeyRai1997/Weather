@@ -386,4 +386,7 @@
         suggestions.classList.add('hidden');
         loadByCoords(btn.dataset.lat, btn.dataset.lon, btn.dataset.label);
       });
+      document.addEventListener('click', (e) => {
+        if (!searchForm.contains(e.target)) suggestions.classList.add('hidden');
+      });
   
