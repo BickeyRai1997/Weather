@@ -379,4 +379,11 @@
           } catch (e) { /* ignore */ }
         }, 300);
       });
+      suggestions.addEventListener('click', (e) => {
+        const btn = e.target.closest('.suggestion-item');
+        if (!btn) return;
+        cityInput.value = btn.dataset.label;
+        suggestions.classList.add('hidden');
+        loadByCoords(btn.dataset.lat, btn.dataset.lon, btn.dataset.label);
+      });
   
