@@ -389,4 +389,13 @@
       document.addEventListener('click', (e) => {
         if (!searchForm.contains(e.target)) suggestions.classList.add('hidden');
       });
-  
+      // geolocation
+      geoBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) { setStatus('Geolocation not supported by this browser.', true); return; }
+        setStatus('Finding your location…');
+        navigator.geolocation.getCurrentPosition(
+          (pos) => loadByCoords(pos.coords.latitude, pos.coords.longitude, 'Current location'),
+          () => setStatus('Location access denied.', true)
+        );
+      });
+ 
