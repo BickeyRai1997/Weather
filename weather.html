@@ -1,319 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Barometer — Weather</title>
-  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --ink: #0B1826;
-      --cream: #F5F0E6;
-      --amber: #E8A33D;
-      --slate: #4A6FA5;
-      --rust: #C1502E;
-      --line: rgba(245, 240, 230, 0.14);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'IBM Plex Sans', sans-serif;
-      background: var(--ink);
-    }
-
-    .font-display {
-      font-family: 'Fraunces', serif;
-    }
-
-    .font-mono {
-      font-family: 'IBM Plex Mono', monospace;
-    }
-
-    .sky-transition {
-      transition: background 1.4s ease;
-    }
-
-    .ticker {
-      animation: scroll-x 40s linear infinite;
-    }
-
-    @keyframes scroll-x {
-      from {
-        transform: translateX(0);
-      }
-
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    .needle {
-      transform-origin: 50% 90%;
-      transition: transform 1s cubic-bezier(.4, 1.4, .6, 1);
-    }
-
-    ::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--line);
-      border-radius: 3px;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ticker {
-        animation: none;
-      }
-
-      .needle {
-        transition: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barometer — Weather</title>
+<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1826;
+    --cream:#F5F0E6;
+    --amber:#E8A33D;
+    --slate:#4A6FA5;
+    --rust:#C1502E;
+    --line: rgba(245,240,230,0.14);
+  }
+  * { box-sizing: border-box; }
+  body { font-family:'IBM Plex Sans', sans-serif; background: var(--ink); }
+  .font-display { font-family:'Fraunces', serif; }
+  .font-mono { font-family:'IBM Plex Mono', monospace; }
+  .sky-transition { transition: background 1.4s ease; }
+  .ticker { animation: scroll-x 40s linear infinite; }
+  @keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .needle { transform-origin: 50% 90%; transition: transform 1s cubic-bezier(.4,1.4,.6,1); }
+  ::-webkit-scrollbar { height: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker { animation: none; }
+    .needle { transition: none; }
+  }
+</style>
 </head>
-
 <body class="min-h-screen text-[var(--cream)]">
 
-  <div id="sky" class="sky-transition min-h-screen"
-    style="background: radial-gradient(120% 100% at 50% -10%, #1B3A5C 0%, #0B1826 55%, #060D15 100%);">
+<div id="sky" class="sky-transition min-h-screen" style="background: radial-gradient(120% 100% at 50% -10%, #1B3A5C 0%, #0B1826 55%, #060D15 100%);">
 
-    <div class="max-w-3xl mx-auto px-6 py-10 md:py-14">
+  <div class="max-w-3xl mx-auto px-6 py-10 md:py-14">
 
-      <!-- Header / instrument label -->
-      <div class="flex items-baseline justify-between border-b border-[var(--line)] pb-4 mb-8">
-        <div>
-          <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--amber)] mb-1">No. 04 — Field
-            Instrument</p>
-          <h1 class="font-display text-3xl md:text-4xl font-medium">Barometer</h1>
-        </div>
-        <p class="font-mono text-xs text-[var(--cream)]/50 hidden sm:block" id="clock">—</p>
+    <!-- Header / instrument label -->
+    <div class="flex items-baseline justify-between border-b border-[var(--line)] pb-4 mb-8">
+      <div>
+        <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--amber)] mb-1">No. 04 — Field Instrument</p>
+        <h1 class="font-display text-3xl md:text-4xl font-medium">Barometer</h1>
       </div>
-
-      <!-- Search -->
-      <form id="searchForm" class="relative mb-10">
-        <label class="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--cream)]/50 block mb-2">Locate a
-          station</label>
-        <div class="flex gap-2">
-          <input id="cityInput" type="text" placeholder="City, country…"
-            class="flex-1 bg-transparent border border-[var(--line)] focus:border-[var(--amber)] outline-none rounded-none px-4 py-3 font-display text-lg placeholder:text-[var(--cream)]/30 transition-colors" />
-          <button type="submit"
-            class="px-5 border border-[var(--amber)] text-[var(--amber)] font-mono text-xs uppercase tracking-[0.15em] hover:bg-[var(--amber)] hover:text-[var(--ink)] transition-colors">
-            Read
-          </button>
-          <button type="button" id="geoBtn" title="Use my location"
-            class="px-4 border border-[var(--line)] text-[var(--cream)]/70 hover:border-[var(--cream)]/50 transition-colors font-mono text-xs">
-            ⦿
-          </button>
-        </div>
-        <div id="suggestions"
-          class="absolute z-10 left-0 right-0 mt-1 bg-[var(--ink)] border border-[var(--line)] hidden"></div>
-      </form>
-
-      <!-- Loading / error -->
-      <div id="status" class="font-mono text-sm text-[var(--cream)]/50 mb-6 hidden"></div>
-
-      <!-- Main readout -->
-      <div id="readout" class="hidden">
-
-        <div class="grid md:grid-cols-[1.3fr_1fr] gap-10 items-start mb-12">
-          <!-- Temp dial -->
-          <div>
-            <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--amber)] mb-2" id="placeName">—</p>
-            <div class="flex items-start gap-4">
-              <span class="font-display text-[7rem] md:text-[8.5rem] leading-none font-light" id="tempMain">—</span>
-              <span class="font-display text-3xl mt-4 text-[var(--cream)]/60">°C</span>
-            </div>
-            <p class="font-mono text-sm text-[var(--cream)]/60 mt-1" id="condition">—</p>
-            <p class="font-mono text-xs text-[var(--cream)]/40 mt-3" id="feelsLike">—</p>
-          </div>
-
-          <!-- Icon + gauges -->
-          <div class="border border-[var(--line)] p-6 flex flex-col items-center">
-            <div id="iconWrap" class="w-28 h-28 mb-4"></div>
-            <div class="grid grid-cols-2 gap-4 w-full font-mono text-xs text-center">
-              <div class="border-t border-[var(--line)] pt-2">
-                <p class="text-[var(--cream)]/40 uppercase tracking-wider mb-1">Wind</p>
-                <p class="text-[var(--cream)] text-sm" id="wind">—</p>
-              </div>
-              <div class="border-t border-[var(--line)] pt-2">
-                <p class="text-[var(--cream)]/40 uppercase tracking-wider mb-1">Humidity</p>
-                <p class="text-[var(--cream)] text-sm" id="humidity">—</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Hourly ticker -->
-        <div class="mb-12">
-          <p
-            class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--cream)]/50 mb-3 border-b border-[var(--line)] pb-2">
-            Next 24 hours</p>
-          <div class="overflow-x-auto">
-            <div id="hourly" class="flex gap-6 pb-2 min-w-max"></div>
-          </div>
-        </div>
-
-        <!-- 7-day -->
-        <div>
-          <p
-            class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--cream)]/50 mb-3 border-b border-[var(--line)] pb-2">
-            Seven-day outlook</p>
-          <div id="daily" class="divide-y divide-[var(--line)]"></div>
-        </div>
-
-      </div>
-
-      <!-- Empty state -->
-      <div id="empty" class="border border-dashed border-[var(--line)] py-16 text-center">
-        <p class="font-display text-xl text-[var(--cream)]/60 mb-2">No station selected</p>
-        <p class="font-mono text-xs text-[var(--cream)]/40">Search a city above, or use your current location.</p>
-      </div>
-
-      <p class="font-mono text-[10px] text-[var(--cream)]/25 mt-14 text-center">Data from Open-Meteo — no key, no
-        tracking.</p>
+      <p class="font-mono text-xs text-[var(--cream)]/50 hidden sm:block" id="clock">—</p>
     </div>
+
+    <!-- Search -->
+    <form id="searchForm" class="relative mb-10">
+      <label class="font-mono text-[11px] tracking-[0.2em] uppercase text-[var(--cream)]/50 block mb-2">Locate a station</label>
+      <div class="flex gap-2">
+        <input id="cityInput" type="text" placeholder="City, country…"
+          class="flex-1 bg-transparent border border-[var(--line)] focus:border-[var(--amber)] outline-none rounded-none px-4 py-3 font-display text-lg placeholder:text-[var(--cream)]/30 transition-colors" />
+        <button type="submit" class="px-5 border border-[var(--amber)] text-[var(--amber)] font-mono text-xs uppercase tracking-[0.15em] hover:bg-[var(--amber)] hover:text-[var(--ink)] transition-colors">
+          Read
+        </button>
+        <button type="button" id="geoBtn" title="Use my location"
+          class="px-4 border border-[var(--line)] text-[var(--cream)]/70 hover:border-[var(--cream)]/50 transition-colors font-mono text-xs">
+          ⦿
+        </button>
+      </div>
+      <div id="suggestions" class="absolute z-10 left-0 right-0 mt-1 bg-[var(--ink)] border border-[var(--line)] hidden"></div>
+    </form>
+
+    <!-- Loading / error -->
+    <div id="status" class="font-mono text-sm text-[var(--cream)]/50 mb-6 hidden"></div>
+
+    <!-- Main readout -->
+    <div id="readout" class="hidden">
+
+      <div class="grid md:grid-cols-[1.3fr_1fr] gap-10 items-start mb-12">
+        <!-- Temp dial -->
+        <div>
+          <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--amber)] mb-2" id="placeName">—</p>
+          <div class="flex items-start gap-4">
+            <span class="font-display text-[7rem] md:text-[8.5rem] leading-none font-light" id="tempMain">—</span>
+            <span class="font-display text-3xl mt-4 text-[var(--cream)]/60">°C</span>
+          </div>
+          <p class="font-mono text-sm text-[var(--cream)]/60 mt-1" id="condition">—</p>
+          <p class="font-mono text-xs text-[var(--cream)]/40 mt-3" id="feelsLike">—</p>
+        </div>
+
+        <!-- Icon + gauges -->
+        <div class="border border-[var(--line)] p-6 flex flex-col items-center">
+          <div id="iconWrap" class="w-28 h-28 mb-4"></div>
+          <div class="grid grid-cols-2 gap-4 w-full font-mono text-xs text-center">
+            <div class="border-t border-[var(--line)] pt-2">
+              <p class="text-[var(--cream)]/40 uppercase tracking-wider mb-1">Wind</p>
+              <p class="text-[var(--cream)] text-sm" id="wind">—</p>
+            </div>
+            <div class="border-t border-[var(--line)] pt-2">
+              <p class="text-[var(--cream)]/40 uppercase tracking-wider mb-1">Humidity</p>
+              <p class="text-[var(--cream)] text-sm" id="humidity">—</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hourly ticker -->
+      <div class="mb-12">
+        <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--cream)]/50 mb-3 border-b border-[var(--line)] pb-2">Next 24 hours</p>
+        <div class="overflow-x-auto">
+          <div id="hourly" class="flex gap-6 pb-2 min-w-max"></div>
+        </div>
+      </div>
+
+      <!-- 7-day -->
+      <div>
+        <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-[var(--cream)]/50 mb-3 border-b border-[var(--line)] pb-2">Seven-day outlook</p>
+        <div id="daily" class="divide-y divide-[var(--line)]"></div>
+      </div>
+
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty" class="border border-dashed border-[var(--line)] py-16 text-center">
+      <p class="font-display text-xl text-[var(--cream)]/60 mb-2">No station selected</p>
+      <p class="font-mono text-xs text-[var(--cream)]/40">Search a city above, or use your current location.</p>
+    </div>
+
+    <p class="font-mono text-[10px] text-[var(--cream)]/25 mt-14 text-center">Data from Open-Meteo — no key, no tracking.</p>
   </div>
+</div>
 
-  <script>
-    (function () {
-      const el = (id) => document.getElementById(id);
-      const searchForm = el('searchForm');
-      const cityInput = el('cityInput');
-      const suggestions = el('suggestions');
-      const statusBox = el('status');
-      const readout = el('readout');
-      const empty = el('empty');
-      const sky = el('sky');
-      const geoBtn = el('geoBtn');
+<script>
+(function () {
+  const el = (id) => document.getElementById(id);
+  const searchForm = el('searchForm');
+  const cityInput = el('cityInput');
+  const suggestions = el('suggestions');
+  const statusBox = el('status');
+  const readout = el('readout');
+  const empty = el('empty');
+  const sky = el('sky');
+  const geoBtn = el('geoBtn');
 
-      // ---- weather code -> label / icon / sky palette ----
-      const WMO = {
-        0: { label: 'Clear sky', icon: 'sun', sky: 'day' },
-        1: { label: 'Mostly clear', icon: 'sun', sky: 'day' },
-        2: { label: 'Partly cloudy', icon: 'cloud-sun', sky: 'day' },
-        3: { label: 'Overcast', icon: 'cloud', sky: 'grey' },
-        45: { label: 'Fog', icon: 'fog', sky: 'grey' },
-        48: { label: 'Depositing fog', icon: 'fog', sky: 'grey' },
-        51: { label: 'Light drizzle', icon: 'rain', sky: 'rain' },
-        53: { label: 'Drizzle', icon: 'rain', sky: 'rain' },
-        55: { label: 'Dense drizzle', icon: 'rain', sky: 'rain' },
-        61: { label: 'Light rain', icon: 'rain', sky: 'rain' },
-        63: { label: 'Rain', icon: 'rain', sky: 'rain' },
-        65: { label: 'Heavy rain', icon: 'rain', sky: 'rain' },
-        71: { label: 'Light snow', icon: 'snow', sky: 'grey' },
-        73: { label: 'Snow', icon: 'snow', sky: 'grey' },
-        75: { label: 'Heavy snow', icon: 'snow', sky: 'grey' },
-        80: { label: 'Rain showers', icon: 'rain', sky: 'rain' },
-        81: { label: 'Rain showers', icon: 'rain', sky: 'rain' },
-        82: { label: 'Violent showers', icon: 'storm', sky: 'rain' },
-        95: { label: 'Thunderstorm', icon: 'storm', sky: 'rain' },
-        96: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
-        99: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
-      };
-      function wmoInfo(code) { return WMO[code] || { label: 'Unknown', icon: 'cloud', sky: 'grey' }; }
+  // ---- weather code -> label / icon / sky palette ----
+  const WMO = {
+    0:  { label: 'Clear sky',        icon: 'sun',    sky: 'day'   },
+    1:  { label: 'Mostly clear',     icon: 'sun',    sky: 'day'   },
+    2:  { label: 'Partly cloudy',    icon: 'cloud-sun', sky: 'day' },
+    3:  { label: 'Overcast',         icon: 'cloud',  sky: 'grey'  },
+    45: { label: 'Fog',              icon: 'fog',    sky: 'grey'  },
+    48: { label: 'Depositing fog',   icon: 'fog',    sky: 'grey'  },
+    51: { label: 'Light drizzle',    icon: 'rain',   sky: 'rain'  },
+    53: { label: 'Drizzle',          icon: 'rain',   sky: 'rain'  },
+    55: { label: 'Dense drizzle',    icon: 'rain',   sky: 'rain'  },
+    61: { label: 'Light rain',       icon: 'rain',   sky: 'rain'  },
+    63: { label: 'Rain',             icon: 'rain',   sky: 'rain'  },
+    65: { label: 'Heavy rain',       icon: 'rain',   sky: 'rain'  },
+    71: { label: 'Light snow',       icon: 'snow',   sky: 'grey'  },
+    73: { label: 'Snow',             icon: 'snow',   sky: 'grey'  },
+    75: { label: 'Heavy snow',       icon: 'snow',   sky: 'grey'  },
+    80: { label: 'Rain showers',     icon: 'rain',   sky: 'rain'  },
+    81: { label: 'Rain showers',     icon: 'rain',   sky: 'rain'  },
+    82: { label: 'Violent showers',  icon: 'storm',  sky: 'rain'  },
+    95: { label: 'Thunderstorm',     icon: 'storm',  sky: 'rain'  },
+    96: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
+    99: { label: 'Thunderstorm, hail', icon: 'storm', sky: 'rain' },
+  };
+  function wmoInfo(code) { return WMO[code] || { label: 'Unknown', icon: 'cloud', sky: 'grey' }; }
 
-      const SKIES = {
-        day: 'radial-gradient(120% 100% at 50% -10%, #2C5A82 0%, #123049 55%, #060D15 100%)',
-        grey: 'radial-gradient(120% 100% at 50% -10%, #33404A 0%, #1A2229 55%, #060D15 100%)',
-        rain: 'radial-gradient(120% 100% at 50% -10%, #24344A 0%, #131B27 55%, #05080C 100%)',
-      };
+  const SKIES = {
+    day:  'radial-gradient(120% 100% at 50% -10%, #2C5A82 0%, #123049 55%, #060D15 100%)',
+    grey: 'radial-gradient(120% 100% at 50% -10%, #33404A 0%, #1A2229 55%, #060D15 100%)',
+    rain: 'radial-gradient(120% 100% at 50% -10%, #24344A 0%, #131B27 55%, #05080C 100%)',
+  };
 
-      const ICONS = {
-        sun: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="20" fill="var(--amber)"/><g stroke="var(--amber)" stroke-width="4" stroke-linecap="round">
+  const ICONS = {
+    sun: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="20" fill="var(--amber)"/><g stroke="var(--amber)" stroke-width="4" stroke-linecap="round">
       <line x1="50" y1="8" x2="50" y2="20"/><line x1="50" y1="80" x2="50" y2="92"/>
       <line x1="8" y1="50" x2="20" y2="50"/><line x1="80" y1="50" x2="92" y2="50"/>
       <line x1="19" y1="19" x2="27" y2="27"/><line x1="73" y1="73" x2="81" y2="81"/>
       <line x1="81" y1="19" x2="73" y2="27"/><line x1="27" y1="73" x2="19" y2="81"/></g></svg>`,
-        'cloud-sun': `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="38" cy="38" r="16" fill="var(--amber)"/><path d="M20 68a16 16 0 0 1 4-31.5A22 22 0 0 1 66 44a14 14 0 0 1-2 28H24a14 14 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
-        cloud: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 72a18 18 0 0 1 4-35.5A24 24 0 0 1 72 46a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
-        fog: `<svg viewBox="0 0 100 100" class="w-full h-full"><g stroke="var(--cream)" stroke-width="5" stroke-linecap="round" opacity="0.7"><line x1="15" y1="35" x2="85" y2="35"/><line x1="25" y1="50" x2="75" y2="50"/><line x1="15" y1="65" x2="85" y2="65"/></g></svg>`,
-        rain: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g stroke="var(--slate)" stroke-width="4" stroke-linecap="round"><line x1="35" y1="72" x2="30" y2="88"/><line x1="52" y1="72" x2="47" y2="88"/><line x1="69" y1="72" x2="64" y2="88"/></g></svg>`,
-        snow: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g fill="var(--cream)"><circle cx="34" cy="82" r="3"/><circle cx="52" cy="86" r="3"/><circle cx="68" cy="80" r="3"/></g></svg>`,
-        storm: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 50a18 18 0 0 1 4-35.5A24 24 0 0 1 72 24a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><polygon points="52,58 40,80 50,80 44,96 66,70 54,70" fill="var(--amber)"/></svg>`,
-      };
+    'cloud-sun': `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="38" cy="38" r="16" fill="var(--amber)"/><path d="M20 68a16 16 0 0 1 4-31.5A22 22 0 0 1 66 44a14 14 0 0 1-2 28H24a14 14 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
+    cloud: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 72a18 18 0 0 1 4-35.5A24 24 0 0 1 72 46a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/></svg>`,
+    fog: `<svg viewBox="0 0 100 100" class="w-full h-full"><g stroke="var(--cream)" stroke-width="5" stroke-linecap="round" opacity="0.7"><line x1="15" y1="35" x2="85" y2="35"/><line x1="25" y1="50" x2="75" y2="50"/><line x1="15" y1="65" x2="85" y2="65"/></g></svg>`,
+    rain: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g stroke="var(--slate)" stroke-width="4" stroke-linecap="round"><line x1="35" y1="72" x2="30" y2="88"/><line x1="52" y1="72" x2="47" y2="88"/><line x1="69" y1="72" x2="64" y2="88"/></g></svg>`,
+    snow: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 55a18 18 0 0 1 4-35.5A24 24 0 0 1 72 29a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><g fill="var(--cream)"><circle cx="34" cy="82" r="3"/><circle cx="52" cy="86" r="3"/><circle cx="68" cy="80" r="3"/></g></svg>`,
+    storm: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M22 50a18 18 0 0 1 4-35.5A24 24 0 0 1 72 24a16 16 0 0 1-2 30H26a16 16 0 0 1-4-4z" fill="var(--cream)" opacity="0.85"/><polygon points="52,58 40,80 50,80 44,96 66,70 54,70" fill="var(--amber)"/></svg>`,
+  };
 
-      function fmtHour(iso) {
-        const d = new Date(iso);
-        return d.toLocaleTimeString(undefined, { hour: 'numeric' });
-      }
-      function fmtDay(iso) {
-        const d = new Date(iso + 'T00:00:00');
-        return d.toLocaleDateString(undefined, { weekday: 'short' });
-      }
+  function fmtHour(iso) {
+    const d = new Date(iso);
+    return d.toLocaleTimeString(undefined, { hour: 'numeric' });
+  }
+  function fmtDay(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { weekday: 'short' });
+  }
 
-      function setSky(kind) { sky.style.background = SKIES[kind] || SKIES.grey; }
+  function setSky(kind) { sky.style.background = SKIES[kind] || SKIES.grey; }
 
-      function setStatus(msg, isError) {
-        statusBox.textContent = msg;
-        statusBox.classList.toggle('hidden', !msg);
-        statusBox.style.color = isError ? 'var(--rust)' : '';
-      }
+  function setStatus(msg, isError) {
+    statusBox.textContent = msg;
+    statusBox.classList.toggle('hidden', !msg);
+    statusBox.style.color = isError ? 'var(--rust)' : '';
+  }
 
-      async function geocode(query) {
-        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
-        if (!res.ok) throw new Error('Geocoding failed');
-        const data = await res.json();
-        return data.results || [];
-      }
+  async function geocode(query) {
+    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=en&format=json`);
+    if (!res.ok) throw new Error('Geocoding failed');
+    const data = await res.json();
+    return data.results || [];
+  }
 
-      async function fetchWeather(lat, lon) {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-          `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m` +
-          `&hourly=temperature_2m,weather_code` +
-          `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
-          `&timezone=auto`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Forecast fetch failed');
-        return res.json();
-      }
+  async function fetchWeather(lat, lon) {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+      `&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m` +
+      `&hourly=temperature_2m,weather_code` +
+      `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
+      `&timezone=auto`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Forecast fetch failed');
+    return res.json();
+  }
 
-      function renderIcon(iconKey) {
-        el('iconWrap').innerHTML = ICONS[iconKey] || ICONS.cloud;
-      }
+  function renderIcon(iconKey) {
+    el('iconWrap').innerHTML = ICONS[iconKey] || ICONS.cloud;
+  }
 
-      function render(place, data) {
-        empty.classList.add('hidden');
-        readout.classList.remove('hidden');
+  function render(place, data) {
+    empty.classList.add('hidden');
+    readout.classList.remove('hidden');
 
-        const cur = data.current;
-        const info = wmoInfo(cur.weather_code);
-        setSky(info.sky);
+    const cur = data.current;
+    const info = wmoInfo(cur.weather_code);
+    setSky(info.sky);
 
-        el('placeName').textContent = place;
-        el('tempMain').textContent = Math.round(cur.temperature_2m);
-        el('condition').textContent = info.label;
-        el('feelsLike').textContent = `Feels like ${Math.round(cur.apparent_temperature)}°`;
-        el('wind').textContent = `${Math.round(cur.wind_speed_10m)} km/h`;
-        el('humidity').textContent = `${Math.round(cur.relative_humidity_2m)}%`;
-        renderIcon(info.icon);
+    el('placeName').textContent = place;
+    el('tempMain').textContent = Math.round(cur.temperature_2m);
+    el('condition').textContent = info.label;
+    el('feelsLike').textContent = `Feels like ${Math.round(cur.apparent_temperature)}°`;
+    el('wind').textContent = `${Math.round(cur.wind_speed_10m)} km/h`;
+    el('humidity').textContent = `${Math.round(cur.relative_humidity_2m)}%`;
+    renderIcon(info.icon);
 
-        // hourly — next 24 from current time
-        const nowIdx = data.hourly.time.findIndex(t => new Date(t) >= new Date(cur.time));
-        const startIdx = nowIdx === -1 ? 0 : nowIdx;
-        const hourlyHtml = data.hourly.time.slice(startIdx, startIdx + 24).map((t, i) => {
-          const idx = startIdx + i;
-          const hInfo = wmoInfo(data.hourly.weather_code[idx]);
-          return `<div class="flex flex-col items-center gap-2 w-14 shrink-0">
+    // hourly — next 24 from current time
+    const nowIdx = data.hourly.time.findIndex(t => new Date(t) >= new Date(cur.time));
+    const startIdx = nowIdx === -1 ? 0 : nowIdx;
+    const hourlyHtml = data.hourly.time.slice(startIdx, startIdx + 24).map((t, i) => {
+      const idx = startIdx + i;
+      const hInfo = wmoInfo(data.hourly.weather_code[idx]);
+      return `<div class="flex flex-col items-center gap-2 w-14 shrink-0">
         <span class="font-mono text-[11px] text-[var(--cream)]/50">${i === 0 ? 'Now' : fmtHour(t)}</span>
         <div class="w-8 h-8">${ICONS[hInfo.icon] || ICONS.cloud}</div>
         <span class="font-display text-lg">${Math.round(data.hourly.temperature_2m[idx])}°</span>
       </div>`;
-        }).join('');
-        el('hourly').innerHTML = hourlyHtml;
+    }).join('');
+    el('hourly').innerHTML = hourlyHtml;
 
-        // daily
-        const dailyHtml = data.daily.time.map((t, i) => {
-          const dInfo = wmoInfo(data.daily.weather_code[i]);
-          return `<div class="flex items-center justify-between py-3">
+    // daily
+    const dailyHtml = data.daily.time.map((t, i) => {
+      const dInfo = wmoInfo(data.daily.weather_code[i]);
+      return `<div class="flex items-center justify-between py-3">
         <span class="font-mono text-sm w-14 text-[var(--cream)]/70">${i === 0 ? 'Today' : fmtDay(t)}</span>
         <div class="w-7 h-7">${ICONS[dInfo.icon] || ICONS.cloud}</div>
         <span class="font-mono text-xs text-[var(--cream)]/50 flex-1 text-center hidden sm:block">${dInfo.label}</span>
@@ -322,93 +263,98 @@
           <span class="text-[var(--cream)]/40 ml-1">${Math.round(data.daily.temperature_2m_min[i])}°</span>
         </span>
       </div>`;
-        }).join('');
-        el('daily').innerHTML = dailyHtml;
-      }
+    }).join('');
+    el('daily').innerHTML = dailyHtml;
+  }
 
-      async function loadByCoords(lat, lon, label) {
-        try {
-          setStatus('Reading the sky…');
-          const data = await fetchWeather(lat, lon);
-          setStatus('');
-          render(label, data);
-        } catch (e) {
-          setStatus('Could not read that station. Try again.', true);
-        }
-      }
+  async function loadByCoords(lat, lon, label) {
+    try {
+      setStatus('Reading the sky…');
+      const data = await fetchWeather(lat, lon);
+      setStatus('');
+      render(label, data);
+    } catch (e) {
+      setStatus('Could not read that station. Try again.', true);
+    }
+  }
 
-      async function loadByQuery(query) {
-        try {
-          setStatus('Locating station…');
-          const results = await geocode(query);
-          if (!results.length) {
-            setStatus('No matching location found.', true);
-            return;
-          }
-          const r = results[0];
+  async function loadByQuery(query) {
+    try {
+      setStatus('Locating station…');
+      const results = await geocode(query);
+      if (!results.length) {
+        setStatus('No matching location found.', true);
+        return;
+      }
+      const r = results[0];
+      const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
+      await loadByCoords(r.latitude, r.longitude, label);
+    } catch (e) {
+      setStatus('Something went wrong. Check your connection.', true);
+    }
+  }
+
+  // search submit
+  searchForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    suggestions.classList.add('hidden');
+    const q = cityInput.value.trim();
+    if (q) loadByQuery(q);
+  });
+
+  // live suggestions
+  let debounceTimer;
+  cityInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    const q = cityInput.value.trim();
+    if (q.length < 2) { suggestions.classList.add('hidden'); return; }
+    debounceTimer = setTimeout(async () => {
+      try {
+        const results = await geocode(q);
+        if (!results.length) { suggestions.classList.add('hidden'); return; }
+        suggestions.innerHTML = results.map(r => {
           const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
-          await loadByCoords(r.latitude, r.longitude, label);
-        } catch (e) {
-          setStatus('Something went wrong. Check your connection.', true);
-        }
-      }
-
-      // search submit
-      searchForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        suggestions.classList.add('hidden');
-        const q = cityInput.value.trim();
-        if (q) loadByQuery(q);
-      });
-      // live suggestions
-      let debounceTimer;
-      cityInput.addEventListener('input', () => {
-        clearTimeout(debounceTimer);
-        const q = cityInput.value.trim();
-        if (q.length < 2) { suggestions.classList.add('hidden'); return; }
-        debounceTimer = setTimeout(async () => {
-          try {
-            const results = await geocode(q);
-            if (!results.length) { suggestions.classList.add('hidden'); return; }
-            suggestions.innerHTML = results.map(r => {
-              const label = [r.name, r.admin1, r.country].filter(Boolean).join(', ');
-              return `<button type="button" data-lat="${r.latitude}" data-lon="${r.longitude}" data-label="${label}"
+          return `<button type="button" data-lat="${r.latitude}" data-lon="${r.longitude}" data-label="${label}"
             class="suggestion-item block w-full text-left px-4 py-2 font-mono text-sm hover:bg-[var(--amber)]/10 hover:text-[var(--amber)] transition-colors">${label}</button>`;
-            }).join('');
-            suggestions.classList.remove('hidden');
-          } catch (e) { /* ignore */ }
-        }, 300);
-      });
-      suggestions.addEventListener('click', (e) => {
-        const btn = e.target.closest('.suggestion-item');
-        if (!btn) return;
-        cityInput.value = btn.dataset.label;
-        suggestions.classList.add('hidden');
-        loadByCoords(btn.dataset.lat, btn.dataset.lon, btn.dataset.label);
-      });
-      document.addEventListener('click', (e) => {
-        if (!searchForm.contains(e.target)) suggestions.classList.add('hidden');
-      });
-      // geolocation
-      geoBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) { setStatus('Geolocation not supported by this browser.', true); return; }
-        setStatus('Finding your location…');
-        navigator.geolocation.getCurrentPosition(
-          (pos) => loadByCoords(pos.coords.latitude, pos.coords.longitude, 'Current location'),
-          () => setStatus('Location access denied.', true)
-        );
-      });
-      // clock
-      function tick() {
-        el('clock').textContent = new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      }
-      tick();
-      setInterval(tick, 1000);
-      // initial load: Kathmandu as a sensible default
-      loadByCoords(27.7172, 85.3240, 'Kathmandu, Nepal');
-    })();
-  </script>
+        }).join('');
+        suggestions.classList.remove('hidden');
+      } catch (e) { /* ignore */ }
+    }, 300);
+  });
+
+  suggestions.addEventListener('click', (e) => {
+    const btn = e.target.closest('.suggestion-item');
+    if (!btn) return;
+    cityInput.value = btn.dataset.label;
+    suggestions.classList.add('hidden');
+    loadByCoords(btn.dataset.lat, btn.dataset.lon, btn.dataset.label);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!searchForm.contains(e.target)) suggestions.classList.add('hidden');
+  });
+
+  // geolocation
+  geoBtn.addEventListener('click', () => {
+    if (!navigator.geolocation) { setStatus('Geolocation not supported by this browser.', true); return; }
+    setStatus('Finding your location…');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => loadByCoords(pos.coords.latitude, pos.coords.longitude, 'Current location'),
+      () => setStatus('Location access denied.', true)
+    );
+  });
+
+  // clock
+  function tick() {
+    el('clock').textContent = new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // initial load: Kathmandu as a sensible default
+  loadByCoords(27.7172, 85.3240, 'Kathmandu, Nepal');
+})();
+</script>
 
 </body>
-
 </html>
