@@ -398,9 +398,17 @@
           () => setStatus('Location access denied.', true)
         );
       });
-       // clock
-  function tick() {
-    el('clock').textContent = new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  }
-  tick();
-  setInterval(tick, 1000);
+      // clock
+      function tick() {
+        el('clock').textContent = new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+      tick();
+      setInterval(tick, 1000);
+      // initial load: Kathmandu as a sensible default
+      loadByCoords(27.7172, 85.3240, 'Kathmandu, Nepal');
+    })();
+  </script>
+
+</body>
+
+</html>
